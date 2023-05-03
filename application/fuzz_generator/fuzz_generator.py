@@ -1,11 +1,10 @@
-from dotenv import load_dotenv
-import os
 from application.config.path import FILES_OUTPUT_PATH
 from application.logging.loggers import get_core_logger
 
-import string
 import multiprocessing
 import concurrent.futures
+
+from application.settings_file.settings_file import settings_main
 
 
 def generate_words(alphabet: str, len_word: int, continue_index: int = 0, amount_of_words: int | None = None) -> list:
@@ -45,12 +44,8 @@ def generate_words_and_write_to_file(args):
 
 
 def concurrency_fuzz_generator():
-    load_dotenv()
 
-    len_word = int(os.getenv("LEN_WORD", 2))
-    amount_of_words = int(os.getenv("AMOUNT_OF_WORDS", 100))
-    continue_index = int(os.getenv("CONTINUE_INDEX", 0))
-    alphabet = os.getenv("ALPHABET", "".join([string.ascii_lowercase, string.digits]))
+    len_word, amount_of_words, continue_index, alphabet = settings_main()
     logger = get_core_logger()
 
     num_words = amount_of_words
